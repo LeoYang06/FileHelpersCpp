@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "mio.hpp"
 #include "DelimitedFileMMFEngine.h"
+
+#include <map>
+#include <queue>
+
 #include "StringUtils.h"
 
 using namespace file_helpers_cpp;
@@ -167,6 +171,7 @@ bool DelimitedFileMmfEngine::WriteAllStringVector(const std::string& path, const
 					char_index++;
 				}
 
+				// 如果还没到每行的最后一个字段，则需要写入分隔符。
 				if (field_index < line_vector.size())
 				{
 					for (auto c : delimiter)
@@ -278,6 +283,118 @@ bool DelimitedFileMmfEngine::WriteAllDoubleVector(const std::string& path, const
 				rw_mmap.sync(error);
 				line_index = 0;
 			}
+		}
+
+		rw_mmap.sync(error);
+		rw_mmap.unmap();
+		return true;
+	}
+	catch (std::exception& ex)
+	{
+		auto msg = ex.what();
+		return false;
+	}
+}
+
+/// <summary>
+/// 打开指定文件，批量修改指定行列字段的值，然后关闭该文件。新值和旧值长度一致，否则报内存映射文件异常。
+/// </summary>
+/// <param name="path">要修改的文件。</param>
+/// <param name="contents">要修改文件的字符串类型的二维数据对。</param>
+/// <param name="error">错误信息。</param>
+/// <returns>是否完成修改操作。</returns>
+bool DelimitedFileMmfEngine::BatchModifyFieldValues(const std::string& path, const std::map<int, std::map<int, std::string>>& contents, std::error_code error) const
+{
+	try
+	{
+		mio::mmap_sink rw_mmap = mio::make_mmap_sink(path, error);
+		if (error)
+		{
+			return false;
+		}
+
+		// 读取的字符索引。
+		int char_index = 0;
+		// 读取的行索引。
+		int line_index = 0;
+		// 读取的行文本。
+		std::string str_line;
+
+		// 新行开始的首字符索引。
+		int new_line_char_index = 0;
+
+		// 表示上一行的待修改字段的索引记录。<第几个字段,字段开始的首字符索引>
+		std::map<int, int> last_line_field_index_record;
+
+		for (auto c : rw_mmap)
+		{
+			if (c == '\r')
+			{
+				char_index++;
+				continue;
+			}
+			if (c == '\n')
+			{
+				// 空行判断
+				if (std::strlen(str_line.c_str()) == 0)
+				{
+					char_index++;
+					// 一行读取完毕后，累计读到的字符索引则为新行索引。这里索引已经 +1。
+					new_line_char_index = char_index;
+					continue;
+				}
+
+				// 从待修改行中查找需要修改的行。
+				auto iter = contents.find(line_index);
+				// 找到待修改行。
+				if (iter != contents.end())
+				{
+					std::vector<std::string> str_fields = Split(str_line, this->delimiter, true);
+
+					int field_index = 0;
+					// 需要修改的行存在则提前将该行各字段的char索引存储下来，供修改使用。
+					for (auto field : str_fields)
+					{
+						if (last_line_field_index_record.empty())
+						{
+							last_line_field_index_record.insert(std::pair<int, int>(field_index, new_line_char_index));
+						}
+						else
+						{
+							// 从第二个字段开始，需要累加前一个字段的size和分隔符的size。
+							const auto end_iter = last_line_field_index_record.rbegin();
+							const int last_field_index = end_iter->second;
+							const int last_field_size = static_cast<int>(str_fields[end_iter->first].size());
+							const int delimiter_size = static_cast<int>(delimiter.size());
+							const int field_start_index = last_field_index + last_field_size + delimiter_size;
+							last_line_field_index_record.insert(std::pair<int, int>(field_index, field_start_index));
+						}
+						field_index++;
+					}
+
+					// 根据对应字段的索引开始逐一字符修改。
+					std::map<int, std::string> modified_fields = iter->second;
+					for (const auto& modified_field : modified_fields)
+					{
+						int modify_index = last_line_field_index_record[modified_field.first];
+						for (auto cha : modified_field.second)
+						{
+							rw_mmap[modify_index] = cha;
+							modify_index++;
+						}
+					}
+				}
+				last_line_field_index_record.clear();
+				str_line.clear();
+
+				char_index++;
+				line_index++;
+				// 一行读取完毕后，累计读到的字符索引则为新行索引。这里索引已经 +1。
+				new_line_char_index = char_index;
+				continue;
+			}
+			char_index++;
+			str_line += c;
 		}
 
 		rw_mmap.sync(error);
