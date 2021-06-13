@@ -9,7 +9,7 @@ namespace file_helpers_cpp
 	/// <summary>
 	/// 表示读取文本行记录的引擎。文件流的读取方式。
 	/// </summary>
-	class __declspec(dllexport) FileSteamEngineBase : protected FileEngineBase
+	class FileSteamEngineBase : protected FileEngineBase
 	{
 	protected:
 		~FileSteamEngineBase() = default;
