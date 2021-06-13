@@ -8,9 +8,11 @@ namespace file_helpers_cpp
 	/// <summary>
 	/// 表示读取文本行记录的引擎。内存映射文件的方式读取。
 	/// </summary>
-	class FileEngineBase
+	class __declspec(dllexport) FileEngineBase
 	{
 	protected:
+		FileEngineBase() = default;
+		
 		~FileEngineBase() = default;
 
 	public:
