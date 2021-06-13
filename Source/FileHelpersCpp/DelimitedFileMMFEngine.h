@@ -66,7 +66,7 @@ namespace file_helpers_cpp
 		/// 打开指定文件，批量修改指定行列字段的值，然后关闭该文件。新值和旧值长度一致，否则报内存映射文件异常。
 		/// </summary>
 		/// <param name="path">要修改的文件。</param>
-		/// <param name="contents">要修改文件的字符串类型的二维数据对。</param>
+		/// <param name="contents">要修改文件的字符串类型的二维数据对。<行索引（从0开始），<字段索引（从0开始，以分隔符分割），新的字段值>></param>
 		/// <param name="error">错误信息。</param>
 		/// <returns>是否完成修改操作。</returns>
 		bool BatchModifyFieldValues(const std::string& path, const std::map<int, std::map<int, std::string>>& contents, std::error_code error) const override;
