@@ -1,10 +1,8 @@
 #include "pch.h"
-#include "mio.hpp"
-#include "DelimitedFileMMFEngine.h"
-
 #include <map>
 #include <queue>
-
+#include "mio.hpp"
+#include "DelimitedFileMMFEngine.h"
 #include "StringUtils.h"
 
 using namespace file_helpers_cpp;
@@ -328,6 +326,10 @@ bool DelimitedFileMmfEngine::BatchModifyFieldValues(const std::string& path, con
 
 		for (auto c : rw_mmap)
 		{
+			if (contents.empty())
+			{
+				return true;
+			}
 			if (c == '\r')
 			{
 				char_index++;

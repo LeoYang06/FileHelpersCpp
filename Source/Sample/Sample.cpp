@@ -124,11 +124,14 @@ inline auto ReadModifyStringVector(const std::string& modified_path, const Delim
 
 		int line_index = 0;
 		std::map<int, std::map<int, std::string>> contents;
-		for (auto line_fields : read_vectors)
+		for (const auto line_fields : read_vectors)
 		{
-			std::map<int, std::string> line_field_pairs;
-			line_field_pairs.insert(std::pair<int, std::string>(line_fields.size() - 1, "111.111"));
-			contents.insert(std::pair<int, std::map<int, std::string>>(line_index, line_field_pairs));
+			if (5 < line_index && line_index < 5000)
+			{
+				std::map<int, std::string> line_field_pairs;
+				line_field_pairs.insert(std::pair<int, std::string>(line_fields.size() - 1, "111.111"));
+				contents.insert(std::pair<int, std::map<int, std::string>>(line_index, line_field_pairs));
+			}
 			line_index++;
 		}
 		const bool result = dfm_engine.BatchModifyFieldValues(modified_path, contents, error);
