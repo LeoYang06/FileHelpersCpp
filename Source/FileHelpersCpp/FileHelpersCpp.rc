@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,2,21148
- PRODUCTVERSION 1,0,2,21148
+ FILEVERSION 1,1,0,21164
+ PRODUCTVERSION 1,1,0,21164
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Frontier"
             VALUE "FileDescription", "FileHelpersCpp"
-            VALUE "FileVersion", "1.0.2.21148"
+            VALUE "FileVersion", "1.1.0.21164"
             VALUE "InternalName", "FileHelpersCpp.dll"
             VALUE "LegalCopyright", "Copyright (C) 2021"
             VALUE "OriginalFilename", "FileHelpersCpp.dll"
             VALUE "ProductName", "FileHelpersCpp"
-            VALUE "ProductVersion", "1.0.2.21148"
+            VALUE "ProductVersion", "1.1.0.21164"
         END
     END
     BLOCK "VarFileInfo"
