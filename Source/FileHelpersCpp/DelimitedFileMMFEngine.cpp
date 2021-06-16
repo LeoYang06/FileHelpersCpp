@@ -40,6 +40,10 @@ bool DelimitedFileMmfEngine::ReadFileAsStringVector(const std::string& path, std
 	{
 		if (c == '\r')
 		{
+			continue;
+		}
+		if (c == '\n')
+		{
 			// ¿ÕÐÐÅÐ¶Ï
 			if (std::strlen(str_line.c_str()) == 0)
 			{
@@ -50,10 +54,6 @@ bool DelimitedFileMmfEngine::ReadFileAsStringVector(const std::string& path, std
 			std::vector<std::string> str_fields = Split(str_line, this->delimiter, true);
 			out_string_vector.push_back(str_fields);
 			str_line.clear();
-			continue;
-		}
-		if (c == '\n')
-		{
 			continue;
 		}
 		str_line += c;
@@ -87,6 +87,10 @@ bool DelimitedFileMmfEngine::ReadFileAsDoubleVector(const std::string& path, std
 	{
 		if (c == '\r')
 		{
+			continue;
+		}
+		if (c == '\n')
+		{
 			// ¿ÕÐÐÅÐ¶Ï
 			if (std::strlen(str_line.c_str()) == 0)
 			{
@@ -97,10 +101,6 @@ bool DelimitedFileMmfEngine::ReadFileAsDoubleVector(const std::string& path, std
 			std::vector<double> double_fields = SplitIntoDouble(str_line, this->delimiter, true);
 			out_double_vector.push_back(double_fields);
 			str_line.clear();
-			continue;
-		}
-		if (c == '\n')
-		{
 			continue;
 		}
 		str_line += c;

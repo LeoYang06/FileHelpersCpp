@@ -75,6 +75,10 @@ bool FileMmfEngineBase::ReadAllLines(const std::string& path, std::vector<std::s
 	{
 		if (c == '\r')
 		{
+			continue;
+		}
+		if (c == '\n')
+		{
 			// 空行判断
 			if (std::strlen(str_line.c_str()) == 0)
 			{
@@ -84,10 +88,6 @@ bool FileMmfEngineBase::ReadAllLines(const std::string& path, std::vector<std::s
 
 			out_all_lines.push_back(str_line);
 			str_line.clear();
-			continue;
-		}
-		if (c == '\n')
-		{
 			continue;
 		}
 		str_line += c;
