@@ -188,8 +188,8 @@ bool FileMmfEngineBase::WriteAllLines(const std::string& path, const std::vector
 	for (auto line : contents)
 	{
 		characters_size += line.size();
-		// 加上换行符长度
-		characters_size += 1;
+		// 加上换行符(\r\n)长度
+		characters_size += 2;
 	}
 
 	std::string error_msg;
@@ -208,6 +208,8 @@ bool FileMmfEngineBase::WriteAllLines(const std::string& path, const std::vector
 			rw_mmap[index] = c;
 			index++;
 		}
+		rw_mmap[index] = '\r';
+		index++;
 		rw_mmap[index] = '\n';
 		index++;
 	}

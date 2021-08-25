@@ -228,8 +228,8 @@ bool DelimitedFileMmfEngine::WriteAllDoubleVector(const std::string& path, const
 				if (field_index < line_vector.size())
 					characters_size += delimiter_size;
 			}
-			// 加上换行符长度
-			characters_size += 1;
+			// 加上换行符(\r\n)长度
+			characters_size += 2;
 		}
 
 		// 始终覆盖创建新文件。
@@ -272,6 +272,8 @@ bool DelimitedFileMmfEngine::WriteAllDoubleVector(const std::string& path, const
 				}
 			}
 
+			rw_mmap[char_index] = '\r';
+			char_index++;
 			rw_mmap[char_index] = '\n';
 			char_index++;
 

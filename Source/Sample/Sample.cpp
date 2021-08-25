@@ -73,6 +73,39 @@ inline auto ReadWriteAllLines(const std::string& readPath, const std::string& wr
 	};
 }
 
+inline auto ReadWriteAllLines(const std::string& readPath, const std::string& writePath, const DelimitedFileSteamEngine& dfs_engine)
+{
+	return [readPath, writePath, dfs_engine]
+	{
+		std::cout << "正在读取或写入文件..." << std::endl;
+		const auto r_start = std::chrono::system_clock::now();
+
+		const std::error_code error;
+		std::vector<std::string> read_all_lines;
+		bool isSuf = dfs_engine.ReadAllLines(readPath, read_all_lines, error);
+		const auto record_count = read_all_lines.size();
+
+		const auto r_end = std::chrono::system_clock::now();
+		const auto r_dt = get_time_interval(r_start, r_end);
+
+		const auto w_start = std::chrono::system_clock::now();
+
+		const bool result = dfs_engine.WriteAllLines(writePath, read_all_lines, error);
+		if (!result)
+		{
+			std::string msg = error.message();
+		}
+		read_all_lines.clear();
+		read_all_lines.shrink_to_fit();
+
+		const auto w_end = std::chrono::system_clock::now();
+		const auto w_dt = get_time_interval(w_start, w_end);
+
+		const std::string output_str = StringFormat("读取点云耗时：%u.%us   点数量：%u   写入点云耗时：%u.%us", r_dt.dt_sec, r_dt.dt_msec, record_count, w_dt.dt_sec, w_dt.dt_msec);
+		std::cout << output_str << std::endl;
+	};
+}
+
 inline auto ReadWriteStringVector(const std::string& readPath, const std::string& writePath, const DelimitedFileMmfEngine& dfm_engine)
 {
 	return[readPath, writePath, dfm_engine]
@@ -90,7 +123,19 @@ inline auto ReadWriteStringVector(const std::string& readPath, const std::string
 
 		const auto w_start = std::chrono::system_clock::now();
 
-		const bool result = dfm_engine.WriteAllStringVector(writePath, read_vectors, error);
+		std::vector<std::vector<std::string>> read_vectors_sw;
+		std::vector<std::string> new_vector;
+		read_vectors_sw.reserve(read_vectors.size());
+		new_vector.reserve(3);
+		for (auto read_vector : read_vectors)
+		{
+			new_vector.push_back(read_vector[1]);
+			new_vector.push_back(read_vector[0]);
+			new_vector.push_back(read_vector[2]);
+			read_vectors_sw.push_back(new_vector);
+			new_vector.clear();
+		}
+		const bool result = dfm_engine.WriteAllStringVector(writePath, read_vectors_sw, error);
 
 		if (!result)
 		{
@@ -165,19 +210,17 @@ int main()
 	const int lineCount = dfm_engine.CountLines(readPath, error);
 	std::cout << "总行数：" << lineCount << std::endl;
 
-	concurrency::create_task(ReadModifyStringVector(readPath, dfm_engine));
+	//concurrency::create_task(ReadModifyStringVector(readPath, dfm_engine));
 
-	//const auto t1 = concurrency::create_task(ReadWriteStringVector(readPath, writePath, dfm_engine));
-	//t1.then(ReadWriteStringVector(readPath, writePath, dfm_engine))
-	//	.then(ReadWriteStringVector(readPath, writePath, dfm_engine))
-	//	.then(ReadWriteStringVector(readPath, writePath, dfm_engine))
-	//	.then(ReadWriteStringVector(readPath, writePath, dfm_engine));
 
-	//const auto t21 = concurrency::create_task(ReadWriteAllLines(readPath, writePath, dfm_engine));
-	//t21.then(ReadWriteAllLines(readPath, writePath, dfm_engine))
+	//const auto t1 = concurrency::create_task(ReadWriteAllLines(readPath, writePath, dfm_engine));
+	//t1.then(ReadWriteAllLines(readPath, writePath, dfm_engine))
 	//	.then(ReadWriteAllLines(readPath, writePath, dfm_engine))
-	//	.then(ReadWriteAllLines(readPath, writePath, dfm_engine))
-	//	.then(ReadWriteAllLines(readPath, writePath, dfm_engine));
+	//	.then(ReadWriteAllLines(readPath, writePath, dfs_engine))
+	//	.then(ReadWriteAllLines(readPath, writePath, dfs_engine))
+	//	.then(ReadWriteAllLines(readPath, writePath, dfs_engine));
+
+	const auto t21 = concurrency::create_task(ReadWriteAllLines(readPath, writePath, dfs_engine));
 
 	std::cin.clear();
 	std::cin.ignore();
