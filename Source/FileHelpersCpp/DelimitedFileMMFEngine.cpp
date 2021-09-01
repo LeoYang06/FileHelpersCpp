@@ -36,7 +36,7 @@ bool DelimitedFileMmfEngine::ReadFileAsStringVector(const std::string& path, std
 
 	std::string str_line;
 
-	for (auto& c : read_mmap)
+	for (const auto& c : read_mmap)
 	{
 		if (c == '\r')
 		{
@@ -83,7 +83,7 @@ bool DelimitedFileMmfEngine::ReadFileAsDoubleVector(const std::string& path, std
 
 	std::string str_line;
 
-	for (auto& c : read_mmap)
+	for (const auto& c : read_mmap)
 	{
 		if (c == '\r')
 		{
@@ -125,11 +125,10 @@ bool DelimitedFileMmfEngine::WriteAllStringVector(const std::string& path, const
 		const int delimiter_size = delimiter.size();
 
 		// 计算contents占用的字符串表现形式的最大长度。
-		for (std::vector<std::string> line_vector : contents)
+		for (const auto& line_vector : contents)
 		{
-			const int rn_size = 1;
 			int field_index = 0;
-			for (auto field : line_vector)
+			for (const auto& field : line_vector)
 			{
 				field_index++;
 				characters_size += field.size();
@@ -156,14 +155,14 @@ bool DelimitedFileMmfEngine::WriteAllStringVector(const std::string& path, const
 
 		int char_index = 0;
 		int line_index = 0;
-		for (std::vector<std::string> line_vector : contents)
+		for (const auto& line_vector : contents)
 		{
 			line_index++;
 			int field_index = 0;
-			for (auto field : line_vector)
+			for (const auto& field : line_vector)
 			{
 				field_index++;
-				for (auto c : field)
+				for (const auto& c : field)
 				{
 					rw_mmap[char_index] = c;
 					char_index++;
@@ -172,7 +171,7 @@ bool DelimitedFileMmfEngine::WriteAllStringVector(const std::string& path, const
 				// 如果还没到每行的最后一个字段，则需要写入分隔符。
 				if (field_index < line_vector.size())
 				{
-					for (auto c : delimiter)
+					for (const auto& c : delimiter)
 					{
 						rw_mmap[char_index] = c;
 						char_index++;
@@ -216,11 +215,10 @@ bool DelimitedFileMmfEngine::WriteAllDoubleVector(const std::string& path, const
 		const int delimiter_size = delimiter.size();
 
 		// 计算contents占用的字符串表现形式的最大长度。
-		for (std::vector<double> line_vector : contents)
+		for (const std::vector<double>& line_vector : contents)
 		{
-			const int rn_size = 1;
 			int field_index = 0;
-			for (auto field : line_vector)
+			for (const auto& field : line_vector)
 			{
 				field_index++;
 				const auto field_str = std::to_string(field);
@@ -248,15 +246,15 @@ bool DelimitedFileMmfEngine::WriteAllDoubleVector(const std::string& path, const
 
 		int char_index = 0;
 		int line_index = 0;
-		for (std::vector<double> line_vector : contents)
+		for (const auto& line_vector : contents)
 		{
 			line_index++;
 			int field_index = 0;
-			for (auto field : line_vector)
+			for (const auto& field : line_vector)
 			{
 				field_index++;
 				const auto field_str = std::to_string(field);
-				for (auto c : field_str)
+				for (const auto& c : field_str)
 				{
 					rw_mmap[char_index] = c;
 					char_index++;
@@ -264,7 +262,7 @@ bool DelimitedFileMmfEngine::WriteAllDoubleVector(const std::string& path, const
 
 				if (field_index < line_vector.size())
 				{
-					for (auto c : delimiter)
+					for (const auto& c : delimiter)
 					{
 						rw_mmap[char_index] = c;
 						char_index++;
@@ -326,7 +324,7 @@ bool DelimitedFileMmfEngine::BatchModifyFieldValues(const std::string& path, con
 		// 表示上一行的待修改字段的索引记录。<第几个字段,字段开始的首字符索引>
 		std::map<int, int> last_line_field_index_record;
 
-		for (auto c : rw_mmap)
+		for (const auto& c : rw_mmap)
 		{
 			if (contents.empty())
 			{
@@ -357,7 +355,7 @@ bool DelimitedFileMmfEngine::BatchModifyFieldValues(const std::string& path, con
 
 					int field_index = 0;
 					// 需要修改的行存在则提前将该行各字段的char索引存储下来，供修改使用。
-					for (auto field : str_fields)
+					for (const auto& field : str_fields)
 					{
 						if (last_line_field_index_record.empty())
 						{
@@ -381,7 +379,7 @@ bool DelimitedFileMmfEngine::BatchModifyFieldValues(const std::string& path, con
 					for (const auto& modified_field : modified_fields)
 					{
 						int modify_index = last_line_field_index_record[modified_field.first];
-						for (auto cha : modified_field.second)
+						for (const auto& cha : modified_field.second)
 						{
 							rw_mmap[modify_index] = cha;
 							modify_index++;

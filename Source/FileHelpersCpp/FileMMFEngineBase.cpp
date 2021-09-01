@@ -15,8 +15,8 @@ using namespace file_helpers_cpp;
 int FileMmfEngineBase::CountLines(const std::string& path, std::error_code error) const
 {
 	int line_count = 0;
-	mio::mmap_source read_mmap = mio::make_mmap_source(path, error);
-	for (auto& c : read_mmap)
+	const mio::mmap_source read_mmap = mio::make_mmap_source(path, error);
+	for (const auto& c : read_mmap)
 	{
 		if (c == '\n')
 		{
@@ -43,7 +43,7 @@ bool FileMmfEngineBase::ReadAllText(const std::string& path, std::string& out_al
 		return false;
 	}
 
-	for (auto& c : read_mmap)
+	for (const auto& c : read_mmap)
 	{
 		out_all_text += c;
 	}
@@ -71,7 +71,7 @@ bool FileMmfEngineBase::ReadAllLines(const std::string& path, std::vector<std::s
 
 	std::string str_line;
 
-	for (auto& c : read_mmap)
+	for (const auto& c : read_mmap)
 	{
 		if (c == '\r')
 		{
@@ -119,7 +119,7 @@ bool FileMmfEngineBase::ReadAllLines(const std::string& path, std::vector<std::s
 
 	int readed_line_number = 1;
 
-	for (auto& c : read_mmap)
+	for (const auto& c : read_mmap)
 	{
 		str_line += c;
 		if (c == '\n')
@@ -164,7 +164,7 @@ bool FileMmfEngineBase::WriteAllText(const std::string& path, const std::string&
 	}
 
 	int index = 0;
-	for (auto c : contents)
+	for (const auto& c : contents)
 	{
 		rw_mmap[index] = c;
 		index++;
@@ -185,7 +185,7 @@ bool FileMmfEngineBase::WriteAllLines(const std::string& path, const std::vector
 {
 	// 始终覆盖创建新文件。
 	long characters_size = 0;
-	for (auto line : contents)
+	for (const auto& line : contents)
 	{
 		characters_size += line.size();
 		// 加上换行符(\r\n)长度
@@ -201,9 +201,9 @@ bool FileMmfEngineBase::WriteAllLines(const std::string& path, const std::vector
 		return false;
 	}
 	int index = 0;
-	for (auto line : contents)
+	for (const auto& line : contents)
 	{
-		for (auto c : line)
+		for (const auto& c : line)
 		{
 			rw_mmap[index] = c;
 			index++;

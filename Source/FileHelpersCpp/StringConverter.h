@@ -58,7 +58,7 @@ inline string ToString(long value)
 inline string ToString(const CString& value)
 {
 	USES_CONVERSION;
-	auto* const str = T2A(value);
+	const auto* const str = T2A(value);
 	return str;
 }
 

@@ -104,7 +104,7 @@ bool DelimitedFileSteamEngine::WriteAllStringVector(const std::string& path, con
 	for (const auto& line_vector : contents)
 	{
 		int index = 0;
-		for (auto field : line_vector)
+		for (const auto& field : line_vector)
 		{
 			index++;
 			outfile << field;
@@ -133,7 +133,7 @@ bool DelimitedFileSteamEngine::WriteAllDoubleVector(const std::string& path, con
 	for (const auto& line_vector : contents)
 	{
 		int index = 0;
-		for (auto field : line_vector)
+		for (const auto& field : line_vector)
 		{
 			index++;
 			outfile << std::to_string(field);
