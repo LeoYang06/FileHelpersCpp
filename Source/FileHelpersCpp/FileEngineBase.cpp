@@ -17,13 +17,29 @@ bool FileEngineBase::FileExists(const std::string& file_name) const
 }
 
 /// <summary>
-/// 按指定大小初始化文件。
+/// 按指定大小以覆盖模式分配空间，文件不存在则初始化文件。
 /// </summary>
 /// <param name="path">文件路径。</param>
 /// <param name="size">分配的文件大小。</param>
-void FileEngineBase::AllocateFile(const std::string& path, const long size) const
+void FileEngineBase::AllocateFile(const std::string& path, const long size)
 {
 	std::ofstream outfile(path);
+	if (size > 0)
+	{
+		const std::string s(size, '\0');
+		outfile << s;
+	}
+	outfile.close();
+}
+
+/// <summary>
+/// 按指定大小以追加模式分配空间，文件不存在则初始化文件。
+/// </summary>
+/// <param name="path">文件路径。</param>
+/// <param name="size">分配的文件大小。</param>
+void FileEngineBase::AllocateFileAppend(const std::string& path, const long size)
+{
+	std::ofstream outfile(path, ios::app | ios::out);
 	if (size > 0)
 	{
 		const std::string s(size, '\0');

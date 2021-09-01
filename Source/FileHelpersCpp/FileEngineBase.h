@@ -12,7 +12,7 @@ namespace file_helpers_cpp
 	{
 	protected:
 		FileEngineBase() = default;
-		
+
 		~FileEngineBase() = default;
 
 	public:
@@ -24,11 +24,18 @@ namespace file_helpers_cpp
 		bool FileExists(const std::string& file_name) const;
 
 		/// <summary>
-		/// 按指定大小初始化文件。
+		/// 按指定大小以覆盖模式分配空间，文件不存在则初始化文件。
 		/// </summary>
 		/// <param name="path">文件路径。</param>
 		/// <param name="size">分配的文件大小。</param>
-		void AllocateFile(const std::string& path, long size = 0) const;
+		static void AllocateFile(const std::string& path, long size = 0);
+
+		/// <summary>
+		/// 按指定大小以追加模式分配空间，文件不存在则初始化文件。
+		/// </summary>
+		/// <param name="path">文件路径。</param>
+		/// <param name="size">分配的文件大小。</param>
+		static void AllocateFileAppend(const std::string& path, long size);
 
 		/// <summary>
 		/// 按指定大小为文件预分配磁盘空间。内存映射文件时建议使用。
