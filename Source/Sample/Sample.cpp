@@ -243,6 +243,18 @@ int main()
 	const int lineCount = dfm_engine.CountLines(readPath, error);
 	std::cout << "总行数：" << lineCount << std::endl;
 
+	//****************************************************************测试预分配****************************************************************
+	//string str_error;
+	//const long allocate_size = 1024000000;
+	//const auto r_start = std::chrono::system_clock::now();
+	//dfm_engine.PreAllocateFile(writePath, str_error, allocate_size);
+	////dfs_engine.AllocateFile(writePath, allocate_size);
+	//const auto r_end = std::chrono::system_clock::now();
+	//const auto r_dt = get_time_interval(r_start, r_end);
+	//const std::string output_str = StringFormat("预分配耗时：%u.%us   预分配大小：%u ", r_dt.dt_sec, r_dt.dt_msec, allocate_size);
+	//std::cout << output_str << std::endl;
+	//****************************************************************测试预分配****************************************************************
+
 	//concurrency::create_task(ReadWriteAllLinesAsDouble(readPath, writePath, dfm_engine));
 
 	//concurrency::create_task(ReadModifyStringVector(readPath, dfm_engine));

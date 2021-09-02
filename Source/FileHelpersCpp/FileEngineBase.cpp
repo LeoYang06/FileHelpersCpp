@@ -21,7 +21,7 @@ bool FileEngineBase::FileExists(const std::string& file_name) const
 /// </summary>
 /// <param name="path">文件路径。</param>
 /// <param name="size">分配的文件大小。</param>
-void FileEngineBase::AllocateFile(const std::string& path, const long size)
+void FileEngineBase::PreAllocateFile(const std::string& path, const long size) const
 {
 	std::ofstream outfile(path);
 	if (size > 0)
@@ -37,7 +37,7 @@ void FileEngineBase::AllocateFile(const std::string& path, const long size)
 /// </summary>
 /// <param name="path">文件路径。</param>
 /// <param name="size">分配的文件大小。</param>
-void FileEngineBase::AllocateFileAppend(const std::string& path, const long size)
+void FileEngineBase::PreAllocateFileAppend(const std::string& path, const long size) const
 {
 	std::ofstream outfile(path, ios::app | ios::out);
 	if (size > 0)
@@ -55,7 +55,7 @@ void FileEngineBase::AllocateFileAppend(const std::string& path, const long size
 /// <param name="error">错误信息。</param>
 /// <param name="size">预分配的文件大小。</param>
 /// <returns>预分配文件是否成功。</returns>
-bool FileEngineBase::PreAllocateFile(const std::string& path, std::string& error, const long size) const
+bool FileEngineBase::PreAllocateFileByMMF(const std::string& path, std::string& error, const long size) const
 {
 	if (path.empty())
 	{

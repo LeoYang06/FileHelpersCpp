@@ -28,14 +28,14 @@ namespace file_helpers_cpp
 		/// </summary>
 		/// <param name="path">文件路径。</param>
 		/// <param name="size">分配的文件大小。</param>
-		static void AllocateFile(const std::string& path, long size = 0);
+		void PreAllocateFile(const std::string& path, long size = 0) const;
 
 		/// <summary>
 		/// 按指定大小以追加模式分配空间，文件不存在则初始化文件。
 		/// </summary>
 		/// <param name="path">文件路径。</param>
 		/// <param name="size">分配的文件大小。</param>
-		static void AllocateFileAppend(const std::string& path, long size);
+		void PreAllocateFileAppend(const std::string& path, long size) const;
 
 		/// <summary>
 		/// 按指定大小为文件预分配磁盘空间。内存映射文件时建议使用。
@@ -44,7 +44,7 @@ namespace file_helpers_cpp
 		/// <param name="error">错误信息。</param>
 		/// <param name="size">预分配的文件大小。</param>
 		/// <returns>预分配文件是否成功。</returns>
-		bool PreAllocateFile(const std::string& path, std::string& error, long size = 0) const;
+		bool PreAllocateFileByMMF(const std::string& path, std::string& error, long size = 0) const;
 
 		/// <summary>
 		/// 统计一个文件的行数。

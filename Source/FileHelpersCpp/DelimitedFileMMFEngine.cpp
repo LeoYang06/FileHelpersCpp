@@ -141,7 +141,7 @@ bool DelimitedFileMmfEngine::WriteAllStringVector(const std::string& path, const
 
 		// 始终覆盖创建新文件。
 		std::string error_msg;
-		const bool result = PreAllocateFile(path, error_msg, characters_size);
+		const bool result = PreAllocateFileByMMF(path, error_msg, characters_size);
 		if (!result)
 		{
 			return false;
@@ -232,7 +232,7 @@ bool DelimitedFileMmfEngine::WriteAllDoubleVector(const std::string& path, const
 
 		// 始终覆盖创建新文件。
 		std::string error_msg;
-		const bool result = PreAllocateFile(path, error_msg, characters_size);
+		const bool result = PreAllocateFileByMMF(path, error_msg, characters_size);
 		if (!result)
 		{
 			return false;

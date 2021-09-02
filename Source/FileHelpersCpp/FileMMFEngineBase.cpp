@@ -155,7 +155,7 @@ bool FileMmfEngineBase::WriteAllText(const std::string& path, const std::string&
 	// 始终覆盖创建新文件。
 	const long characters_size = contents.size();
 	std::string error_msg;
-	const bool result = PreAllocateFile(path, error_msg, characters_size);
+	const bool result = PreAllocateFileByMMF(path, error_msg, characters_size);
 
 	mio::mmap_sink rw_mmap = mio::make_mmap_sink(path, error);
 	if (error)
@@ -193,7 +193,7 @@ bool FileMmfEngineBase::WriteAllLines(const std::string& path, const std::vector
 	}
 
 	std::string error_msg;
-	const bool result = PreAllocateFile(path, error_msg, characters_size);
+	const bool result = PreAllocateFileByMMF(path, error_msg, characters_size);
 
 	mio::mmap_sink rw_mmap = mio::make_mmap_sink(path, error);
 	if (error)

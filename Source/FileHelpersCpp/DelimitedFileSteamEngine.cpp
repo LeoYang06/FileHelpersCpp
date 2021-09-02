@@ -98,7 +98,7 @@ bool DelimitedFileSteamEngine::ReadFileAsDoubleVector(const std::string& path, s
 bool DelimitedFileSteamEngine::WriteAllStringVector(const std::string& path, const std::vector<std::vector<std::string>>& contents, std::error_code error) const
 {
 	// 始终覆盖创建新文件。
-	AllocateFile(path);
+	PreAllocateFile(path);
 
 	std::ofstream outfile(path, std::ios::app);
 	for (const auto& line_vector : contents)
@@ -127,7 +127,7 @@ bool DelimitedFileSteamEngine::WriteAllStringVector(const std::string& path, con
 bool DelimitedFileSteamEngine::WriteAllDoubleVector(const std::string& path, const std::vector<std::vector<double>>& contents, std::error_code error) const
 {
 	// 始终覆盖创建新文件。
-	AllocateFile(path);
+	PreAllocateFile(path);
 
 	std::ofstream outfile(path, std::ios::app);
 	for (const auto& line_vector : contents)

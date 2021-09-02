@@ -137,7 +137,7 @@ bool FileSteamEngineBase::ReadAllLines(const std::string& path, std::vector<std:
 bool FileSteamEngineBase::WriteAllText(const std::string& path, const std::string& contents, std::error_code error) const
 {
 	// 始终覆盖创建新文件。
-	AllocateFile(path);
+	PreAllocateFile(path);
 
 	std::ofstream outfile(path);
 	outfile << contents << std::endl;
@@ -155,7 +155,7 @@ bool FileSteamEngineBase::WriteAllText(const std::string& path, const std::strin
 bool FileSteamEngineBase::WriteAllLines(const std::string& path, const std::vector<std::string>& contents, std::error_code error) const
 {
 	// 始终覆盖创建新文件。
-	AllocateFile(path);
+	PreAllocateFile(path);
 
 	std::ofstream outfile(path, std::ios::app);
 	for (const auto& line : contents)
